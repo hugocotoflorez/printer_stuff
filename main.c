@@ -51,6 +51,17 @@ void add_new_printer(TLISTA printers_data)
     }
 }
 
+void send_task(TLISTA* printers_data)
+{
+    char printer_name[NAME_LEN];
+    int task;
+    printf("Name: ");
+    scanf(" %s", printer_name);
+    printf("Task id: ");
+    scanf(" %d", &task);
+    new_task(printers_data, printer_name, task);
+}
+
 
 int main(int argc, char** argv)
 {
@@ -97,16 +108,25 @@ int main(int argc, char** argv)
             case 'n':
             case 'N':
             {
+                send_task(&printers_data);
                 break;
             }
             case 's':
             case 'S':
             {
+
+                printf("Printer name: ");
+                scanf(" %s", name);
+                show_pending_tasks(&printers_data, name);
                 break;
             }
             case 'p':
             case 'P':
             {
+                printf("Printer name: ");
+                scanf(" %s", name);
+                print_task(&printers_data, name);
+
                 break;
             }
             case 'l':
@@ -117,7 +137,7 @@ int main(int argc, char** argv)
             case 'e':
             case 'E':
             {
-                delete_list(printers_data);
+                delete_list(&printers_data);
                 printf("Exiting...\n");
                 break;
             }

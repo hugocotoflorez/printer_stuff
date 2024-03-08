@@ -9,6 +9,7 @@ typedef struct
 {
     char *name, *brand, *model, *ubication;
     TCOLA tasks;
+    int tasks_counter;
 } PRINTER;
 typedef PRINTER TIPOELEMENTOLISTA ;
 ///////////////////////////////////////////////////

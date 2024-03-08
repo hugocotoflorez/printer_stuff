@@ -4,7 +4,8 @@
 #include "lista.h"
 #include <stdio.h>
 
-#define DEBUG 1
+#define DEBUG 0
+
 #define PRINTER_STR_MAX 100
 #define UBICATION_LEN 20
 #define MODEL_LEN 20
@@ -23,7 +24,10 @@
 extern void FREE(void*);
 
 extern void* new_printer_structure();
+void new_task(TLISTA* printers_list, char* printer_name, int task);
 
+void print_task(TLISTA* printers_list, char* printer_name);
+void show_pending_tasks(TLISTA* printers_list, char* printer_name);
 
 extern void add_printer(TLISTA* printers_list, PRINTER printer);
 
