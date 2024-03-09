@@ -163,6 +163,7 @@ int load_initial_data(char* filename, TLISTA* printers_list)
     if(get_printer_from_file(f, printers_list))
     {
         delete_list(printers_list);
+        fclose(f);
         return 1;
     }
     fclose(f);
