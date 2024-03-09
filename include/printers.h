@@ -4,7 +4,7 @@
 #include "lista.h"
 #include <stdio.h>
 
-#define DEBUG 1
+#define DEBUG 0
 
 #define PRINTER_STR_MAX 100
 #define UBICATION_LEN 20

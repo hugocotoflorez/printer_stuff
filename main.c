@@ -55,7 +55,7 @@ void send_task(TLISTA* printers_data)
 {
     char printer_name[NAME_LEN];
     int task;
-    printf("Name: ");
+    printf("Printer name: ");
     scanf(" %s", printer_name);
     printf("Task id: ");
     scanf(" %d", &task);

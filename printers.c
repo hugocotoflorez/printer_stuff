@@ -296,10 +296,10 @@ void show_lowest_load_printer(TLISTA* printers_list)
 {
     TPOSICION current;
     PRINTER current_printer;
-    char** ll_printers = NULL;
-    TPOSICION ultimo   = finLista(*printers_list);
-    int lowest_load    = MAX_LOAD;
-    int lowest_load_n  = 0;
+    char* ll_printers = NULL;
+    TPOSICION ultimo  = finLista(*printers_list);
+    int lowest_load   = MAX_LOAD;
+    int lowest_load_n = 0;
     int load;
     if(esListaVacia(*printers_list))
         printf("No printers connected\n");
@@ -313,19 +313,18 @@ void show_lowest_load_printer(TLISTA* printers_list)
             {
                 lowest_load   = load;
                 lowest_load_n = 0;
-                if(ll_printers != NULL)
-                    FREE(ll_printers);
+                free(ll_printers);
             }
             if(load <= lowest_load)
             {
                 ll_printers = realloc(ll_printers, NAME_LEN * ++lowest_load_n);
-                malloc_counter++; // debug stuff
-                memcpy(current_printer.name, ll_printers[lowest_load_n - 1], NAME_LEN);
+                strncpy(ll_printers + NAME_LEN * (lowest_load_n - 1),
+                current_printer.name, NAME_LEN);
             }
         }
     for(int i = 0; i < lowest_load_n; i++)
     {
-        printf("Printer %s: Pending tasks: %d\n", ll_printers[i], load);
+        printf("Printer %s: Pending tasks: %d\n", ll_printers + i * NAME_LEN, load);
     }
-    FREE(ll_printers);
+    free(ll_printers);
 }
