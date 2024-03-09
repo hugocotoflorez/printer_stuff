@@ -4,13 +4,14 @@
 #include "lista.h"
 #include <stdio.h>
 
-#define DEBUG 0
+#define DEBUG 1
 
 #define PRINTER_STR_MAX 100
 #define UBICATION_LEN 20
 #define MODEL_LEN 20
 #define BRAND_LEN 20
 #define NAME_LEN 20
+#define MAX_LOAD 100
 
 /**
  * This library depends on lista.h and its
@@ -23,6 +24,7 @@
 
 extern void FREE(void*);
 
+void show_lowest_load_printer(TLISTA* printers_list);
 extern void* new_printer_structure();
 void new_task(TLISTA* printers_list, char* printer_name, int task);
 

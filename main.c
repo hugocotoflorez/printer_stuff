@@ -35,7 +35,7 @@ void add_new_printer(TLISTA printers_data)
     scanf(" %s", printer->model);
     printf("Ubication: ");
     scanf(" %s", printer->ubication);
-    printf("Add printer %s %s %s %s ?[y/n]", printer->name, printer->brand,
+    printf("Add printer %s %s %s %s [y/n] ", printer->name, printer->brand,
     printer->model, printer->ubication);
     scanf(" %c", &option);
     switch(option)
@@ -132,6 +132,7 @@ int main(int argc, char** argv)
             case 'l':
             case 'L':
             {
+                show_lowest_load_printer(&printers_data);
                 break;
             }
             case 'e':

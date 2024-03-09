@@ -1,0 +1,50 @@
+LOAD FILE
+    empty name
+    special character
+    no existing file
+    no txt file
+    file without correct format
+
+DELETE
+    delete the last one
+    delete the first
+    delete middle element
+    delete at empty
+    delete no existing printer
+
+ADD
+    add printer with same name
+    add printer with especial character
+
+ADD & DELETE
+    add a printer and delete it
+
+SEND TASK
+    send task to printer without tasks
+    send task to printer with tasks
+    send task to printer that had taskts but already print all
+    send task to no existing printer
+    send task with same id
+
+SHOW TASK
+    show task of printer with no tasks
+    show tasks of printer wirh tasks
+    show task of printer that had taskts but already print all
+    show tasks of no existing printer
+
+PRINT
+    print from printer wirhout tasks
+    print from printer with tasks
+    print from no existing printer
+
+LOWESTLOAD
+    get with all printers at 0
+    get with all printers equal except one
+    get with two printers at same load
+    get with one printer at lowest.
+
+EXIT
+    In all above cases the mallocs and frees should be equal (dif=0)
+
+
+

@@ -32,51 +32,35 @@ void FREE(void* ptr)
 }
 
 
-void* new_printer_structure()
-{
-    PRINTER* main;
-    main = MALLOC(sizeof(PRINTER));
-    if(main == NULL)
-    {
-        printf("Cannot allocate memory\n");
-        return NULL;
-    }
-    main->name = MALLOC(NAME_LEN);
-    if(main->name == NULL)
-    {
-        printf("Cannot allocate memory\n");
-        return NULL;
-    }
-    main->brand = MALLOC(BRAND_LEN);
-    if(main->brand == NULL)
-    {
-        printf("Cannot allocate memory\n");
-        return NULL;
-    }
-    main->model = MALLOC(MODEL_LEN);
-    if(main->model == NULL)
-    {
-        printf("Cannot allocate memory\n");
-        return NULL;
-    }
-    main->ubication = MALLOC(UBICATION_LEN);
-    if(main->ubication == NULL)
-    {
-        printf("Cannot allocate memory\n");
-        return NULL;
-    }
-    crearCola(&(main->tasks));
-    return main;
-}
-
-
 void free_printer_structure(PRINTER printer_s)
 {
     FREE(printer_s.name);
     FREE(printer_s.brand);
     FREE(printer_s.model);
     FREE(printer_s.ubication);
+    FREE(printer_s.tasks_count);
     destruirCola(&(printer_s.tasks));
+}
+
+
+void* new_printer_structure()
+{
+    PRINTER* main;
+    main              = MALLOC(sizeof(PRINTER));
+    main->name        = MALLOC(NAME_LEN);
+    main->brand       = MALLOC(BRAND_LEN);
+    main->model       = MALLOC(MODEL_LEN);
+    main->ubication   = MALLOC(UBICATION_LEN);
+    main->tasks_count = MALLOC(sizeof(int));
+    crearCola(&(main->tasks));
+    if((main == NULL) || (main->name == NULL) || (main->brand == NULL) ||
+    (main->model == NULL) || (main->ubication == NULL) || (main->tasks_count == NULL))
+    {
+        free_printer_structure(*main);
+        printf("Cannot allocate memory\n");
+        return NULL;
+    }
+    return main;
 }
 
 
@@ -85,20 +69,17 @@ void delete_list(TLISTA* list)
     TPOSICION current;
     PRINTER current_element;
     TPOSICION ultimo = finLista(*list);
-    if(esListaVacia(*list))
-    {
-        printf("Lista vacia\n");
-    }
-    for(current = primeroLista(*list); current != ultimo;
-        current = siguienteLista(*list, current))
-    {
-        recuperarElementoLista(*list, current, &current_element);
-        printf("Removing connection with printer: %s %s %s %s\n",
-        current_element.name, current_element.brand, current_element.model,
-        current_element.ubication);
-        free_printer_structure(current_element);
-        malloc_counter--;
-    }
+    if(!esListaVacia(*list))
+        for(current = primeroLista(*list); current != ultimo;
+            current = siguienteLista(*list, current))
+        {
+            recuperarElementoLista(*list, current, &current_element);
+            printf("Removing connection with printer: %s %s %s %s\n",
+            current_element.name, current_element.brand, current_element.model,
+            current_element.ubication);
+            free_printer_structure(current_element);
+            malloc_counter--;
+        }
     destruirLista(list);
     if(DEBUG > 0)
         printf("Mallocs without free: %d\n", malloc_counter);
@@ -128,7 +109,7 @@ int delete_printer(TLISTA* printers_list, char* printer_name)
             current_element.name, current_element.brand, current_element.model,
             current_element.ubication);
             free_printer_structure(current_element);
-            suprimirElementoLista(*printers_list, current);
+            suprimirElementoLista(printers_list, current);
             malloc_counter--;
             return 0;
         }
@@ -176,17 +157,11 @@ int parse_printer_data(char* line, PRINTER* printer_s)
 
 int get_printer_from_file(FILE* file, TLISTA* printers_list)
 {
-    char* line;
+    char line[PRINTER_STR_MAX];
     PRINTER* printer_s;
     if(file == NULL)
     {
         printf("Invalid file pointer\n");
-        return 1;
-    }
-    line = MALLOC(sizeof(char) * PRINTER_STR_MAX);
-    if(line == NULL)
-    {
-        printf("Cannot allocate memory. Exiting\n");
         return 1;
     }
     while(fgets(line, PRINTER_STR_MAX, file))
@@ -201,11 +176,9 @@ int get_printer_from_file(FILE* file, TLISTA* printers_list)
         {
             free_printer_structure(*printer_s);
             FREE(printer_s);
-            FREE(line);
             return 1;
         }
     }
-    FREE(line);
     return 0;
 }
 
@@ -264,36 +237,39 @@ int get_printer_data(TLISTA* printers_list, char* printer_name, PRINTER* printer
 
 void new_task(TLISTA* printers_list, char* printer_name, int task)
 {
-    PRINTER current_element;
-    if(!get_printer_data(printers_list, printer_name, &current_element))
+    PRINTER* current_element;
+    current_element = MALLOC(sizeof(PRINTER));
+    if(!get_printer_data(printers_list, printer_name, current_element))
     {
-        anadirElementoCola(&current_element.tasks, task);
-        current_element.tasks_count++;
-        printf("Task %d added to %s\n", task, current_element.name);
+        anadirElementoCola(&current_element->tasks, task);
+        (*current_element->tasks_count)++;
+        printf("Task %d added to %s\n", task, current_element->name);
     }
+    FREE(current_element);
 }
 
 
 void show_pending_tasks(TLISTA* printers_list, char* printer_name)
 {
-    PRINTER current_element;
+    PRINTER current_printer;
     TIPOELEMENTOCOLA task;
-    TCOLA temp_queue;
-    printf("Getting taskts from printer %s\n", printer_name);
-    if(!get_printer_data(printers_list, printer_name, &current_element))
+    int length;
+    if(!get_printer_data(printers_list, printer_name, &current_printer))
     {
-        printf("Tasks: %d\n", current_element.tasks_count);
-        temp_queue = current_element.tasks;
-        while(!esColaVacia(temp_queue))
+        length = *current_printer.tasks_count;
+        printf("[ Pending tasks for %s: %d ]\n", printer_name, length);
+        for(int i = 0; i < length && i < 10; i++)
         {
-            consultarPrimerElementoCola(temp_queue, &task);
-            printf("Task id: %d\n", task);
-            suprimirElementoCola(&temp_queue);
+            consultarPrimerElementoCola(current_printer.tasks, &task);
+            anadirElementoCola(&current_printer.tasks, task);
+            suprimirElementoCola(&current_printer.tasks);
+            printf("Pending task %d: task %d\n", i + 1, task);
         }
-        return;
+        if(!length)
+            printf("Printer have not pending tasks\n");
     }
-    printf("Printer %s is not connected\n", printer_name);
-    return;
+    else
+        printf("Printer %s is not connected\n", printer_name);
 }
 
 
@@ -303,9 +279,53 @@ void print_task(TLISTA* printers_list, char* printer_name)
     TIPOELEMENTOCOLA task;
     if(!get_printer_data(printers_list, printer_name, &printer_data))
     {
-        consultarPrimerElementoCola(printer_data.tasks, &task);
-        suprimirElementoCola(&printer_data.tasks);
-        printer_data.tasks--;
-        printf("Printing task %d in %s\n", task, printer_name);
+        if(!esColaVacia(printer_data.tasks))
+        {
+            consultarPrimerElementoCola(printer_data.tasks, &task);
+            suprimirElementoCola(&printer_data.tasks);
+            (*printer_data.tasks_count)--;
+            printf("Printing task %d in %s\n", task, printer_name);
+        }
+        else
+            printf("Printer have not pending tasks\n");
     }
+}
+
+
+void show_lowest_load_printer(TLISTA* printers_list)
+{
+    TPOSICION current;
+    PRINTER current_printer;
+    char** ll_printers = NULL;
+    TPOSICION ultimo   = finLista(*printers_list);
+    int lowest_load    = MAX_LOAD;
+    int lowest_load_n  = 0;
+    int load;
+    if(esListaVacia(*printers_list))
+        printf("No printers connected\n");
+    else
+        for(current = primeroLista(*printers_list); current != ultimo;
+            current = siguienteLista(*printers_list, current))
+        {
+            recuperarElementoLista(*printers_list, current, &current_printer);
+            load = *current_printer.tasks_count;
+            if(load < lowest_load)
+            {
+                lowest_load   = load;
+                lowest_load_n = 0;
+                if(ll_printers != NULL)
+                    FREE(ll_printers);
+            }
+            if(load <= lowest_load)
+            {
+                ll_printers = realloc(ll_printers, NAME_LEN * ++lowest_load_n);
+                malloc_counter++; // debug stuff
+                memcpy(current_printer.name, ll_printers[lowest_load_n - 1], NAME_LEN);
+            }
+        }
+    for(int i = 0; i < lowest_load_n; i++)
+    {
+        printf("Printer %s: Pending tasks: %d\n", ll_printers[i], load);
+    }
+    FREE(ll_printers);
 }
