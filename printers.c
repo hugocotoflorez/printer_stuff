@@ -158,11 +158,14 @@ int load_initial_data(char* filename, TLISTA* printers_list)
     {
         printf("[!] Filename '%s' not found\n", filename);
         delete_list(printers_list);
+        return 1;
     }
     if(get_printer_from_file(f, printers_list))
     {
         delete_list(printers_list);
+        return 1;
     }
+    fclose(f);
     return 0;
 }
 
