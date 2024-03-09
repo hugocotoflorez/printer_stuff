@@ -4,23 +4,29 @@
 #include <string.h>
 
 
-void menu()
-{
-    printf("┌───────────────────────┐\n");
-    printf("│Printer stuff          │\n");
-    printf("├───────────────────────┤\n");
-    printf("│d) Delete printer      │\n");
-    printf("│a) Add printer         │\n");
-    printf("│t) Send new task       │\n");
-    printf("│s) Show pending tasks  │\n");
-    printf("│p) Print task          │\n");
-    printf("│l) Lowest load printer │\n");
-    printf("│e) Exit                │\n");
-    printf("├───────────────────────┤\n");
-    printf("│Option:                │\n");
-    printf("└───────────────────────┘\n");
+#define CLRSCREEN() printf("\e[H\e[J");
+
+#define MENU()                             \
+    printf("┌───────────────────────┐\n"); \
+    printf("│Printer stuff          │\n"); \
+    printf("├───────────────────────┤\n"); \
+    printf("│d) Delete printer      │\n"); \
+    printf("│a) Add printer         │\n"); \
+    printf("│t) Send new task       │\n"); \
+    printf("│s) Show pending tasks  │\n"); \
+    printf("│p) Print task          │\n"); \
+    printf("│l) Lowest load printer │\n"); \
+    printf("│e) Exit                │\n"); \
+    printf("├───────────────────────┤\n"); \
+    printf("│Option:                │\n"); \
+    printf("└───────────────────────┘\n"); \
     printf("\e[2F\e[9C");
-}
+
+
+#define GET_PNAME(name)       \
+    printf("Printer name: "); \
+    scanf(" %s", name);
+
 
 void add_new_printer(TLISTA printers_data)
 {
@@ -48,8 +54,9 @@ void add_new_printer(TLISTA printers_data)
             free_printer_structure(*printer);
             break;
     }
-    FREE(printer);
+    free(printer);
 }
+
 
 void send_task(TLISTA* printers_data)
 {
@@ -65,7 +72,7 @@ void send_task(TLISTA* printers_data)
 
 int main(int argc, char** argv)
 {
-    // TODO
+    CLRSCREEN();
     TLISTA printers_data = NULL;
     if(argc <= 1)
     {
@@ -82,69 +89,48 @@ int main(int argc, char** argv)
     char name[NAME_LEN];
     do
     {
-        menu();
+        MENU();
         scanf(" %c", &option);
         printf("\e[2B");
         switch(option)
         {
             case 'd':
             case 'D':
-            {
-                printf("Printer name: ");
-                scanf(" %s", name);
+                GET_PNAME(name);
                 delete_printer(&printers_data, name);
                 avaliable_printers(printers_data);
                 break;
-            }
             case 'a':
             case 'A':
-            {
                 add_new_printer(&printers_data);
                 avaliable_printers(printers_data);
                 break;
-            }
             case 't':
             case 'T':
-            {
                 send_task(&printers_data);
                 break;
-            }
             case 's':
             case 'S':
-            {
-
-                printf("Printer name: ");
-                scanf(" %s", name);
+                GET_PNAME(name);
                 show_pending_tasks(&printers_data, name);
                 break;
-            }
             case 'p':
             case 'P':
-            {
-                printf("Printer name: ");
-                scanf(" %s", name);
+                GET_PNAME(name);
                 print_task(&printers_data, name);
-
                 break;
-            }
             case 'l':
             case 'L':
-            {
                 show_lowest_load_printer(&printers_data);
                 break;
-            }
             case 'e':
             case 'E':
-            {
                 delete_list(&printers_data);
                 printf("Exiting...\n");
                 break;
-            }
             default:
-            {
                 printf("Option not found\n");
                 break;
-            }
         }
     } while(option != 'e');
     return 0;

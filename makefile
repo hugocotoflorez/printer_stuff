@@ -1,12 +1,5 @@
 #opciones de compilacion, muestra todos los warnings (-Wall)
 CC=@gcc
-#si incluye una librer�a est�ndar, en este caso la matematica (fichero libm.a)
-#todas tienen el formato de fichero libNOMBRE.a
-#y  al incluirla en el compilador se pone -lNOMBRE
-#si no hay librerias adicionales, se elimina esta linea
-LIBS_FILES_DIR=.
-LIBRARIES= -L $(LIBS_FILES_DIR)
-LIBS =
 
 #carpeta de las cabeceras (si estan en la actual, ponemos .)
 HEADER_FILES_DIR = ./include
@@ -28,7 +21,7 @@ OBJS = $(SRCS:.c=.o)
 #si no hay librerias adicionales, no existen la variable $(LIBS),
 #por lo que se elimina $(LIBS) de la regla siguiente
 $(OUTPUT): $(OBJS)
-	$(CC) -o $(OUTPUT) $(OBJS) $(LIBRARIES) $(LIBS)
+	$(CC) -o $(OUTPUT) $(OBJS)
 
 #REGLA 2: genera los .o cuando es necesario, dependencia de los .c y .h
 #solo genera los .o necesarios por cambios en los .c o .h

@@ -4,8 +4,6 @@
 #include "lista.h"
 #include <stdio.h>
 
-#define DEBUG 1
-
 #define PRINTER_STR_MAX 100
 #define UBICATION_LEN 20
 #define MODEL_LEN 20
@@ -22,77 +20,75 @@
  */
 
 
-extern void FREE(void*);
+/**
+ * free_printer_structure
+ */
+void free_printer_structure(PRINTER printer_s);
 
-void show_lowest_load_printer(TLISTA* printers_list);
-extern void* new_printer_structure();
+/**
+ * new_printer_structure
+ */
+void* new_printer_structure();
+
+/**
+ * delete_list
+ */
+void delete_list(TLISTA* list);
+
+/**
+ * delete_printer
+ */
+int delete_printer(TLISTA* printers_list, char* printer_name);
+
+/**
+ * avaliable_printers
+ */
+void avaliable_printers(TLISTA printers_list);
+
+/**
+ * parse_printer_data
+ */
+int parse_printer_data(char* line, PRINTER* printer_s);
+
+/**
+ * get_printer_from_file
+ */
+int get_printer_from_file(FILE* file, TLISTA* printers_list);
+
+/**
+ * load_initial_data
+ */
+int load_initial_data(char* filename, TLISTA* printers_list);
+
+/**
+ * get_printer_data
+ */
+int get_printer_data(TLISTA* printers_list, char* printer_name, PRINTER* printer_s);
+
+/**
+ * add_printer
+ */
+void add_printer(TLISTA* printers_list, PRINTER printer_s);
+
+/**
+ * new_task
+ */
 void new_task(TLISTA* printers_list, char* printer_name, int task);
 
-void print_task(TLISTA* printers_list, char* printer_name);
+/**
+ * show_pending_tasks
+ */
 void show_pending_tasks(TLISTA* printers_list, char* printer_name);
 
-extern void add_printer(TLISTA* printers_list, PRINTER printer);
+/**
+ * print_task
+ */
+void print_task(TLISTA* printers_list, char* printer_name);
 
 /**
- * free_printer_structure(PRINTER) -> void
- * Free the fields inside the structure provided.
- * Needed because lista.h/destruirLista dont free
- * structure corectly.
+ * show_lowest_load_printer
  */
-extern void free_printer_structure(PRINTER printer_s);
-
-/**
- * delete_list(TLISTA*) -> void
- * Delete a non empty list correctly. It merges
- * free_printer_structure with list.h/destruirLista
- * to correctly destroy a list of PRINTER structures.
- */
-extern void delete_list(TLISTA* list);
-
-/**
- * delete_printer(TLISTA*, char*) -> int (error value)
- * Remove a single printer by name
- * If its not coneected returns 1,
- * otherwise remove it and returns 0.
- * If there are more than one with the same
- * name it will only delete one.
- */
-extern int delete_printer(TLISTA* printers_list, char* printer_name);
-
-/**
- * __debug_print_list(TLISTA) -> void
- * Print the name of the printers stored in the
- * list provided. Must be used only for debugging
- * purposes.
- */
-extern void avaliable_printers(TLISTA printers_data);
-
-/**
- * load_initial_data(char*, TLISTA*) -> int (error value)
- * Move the name of printers stored in 'filename'
- * to an list. This list is created inside the function
- * so it must be passed as an empty TLISTA.
- * ERRORS:
- *  all errors generated inside the function
- *  are a break point with return value 1.
- *  Otherwise, if no errors, the return value is 0.
- */
-extern int load_initial_data(char* filename, TLISTA* printers_data);
-
-/**
- * get_printer_from_file(FILE*, TLISTA*) -> int (error value)
- * Get the printers stored in a file.
- * Its recommended to use load_initial_data because
- * its the hight level implementation of this function.
- */
-extern int get_printer_from_file(FILE* file, TLISTA* printers_data);
-
-/**
- * parse_printer_data(char*, PRINTER*) -> int (error value)
- * Given a string that contains printers information
- * it extracts the data and store it in a given struct.
- */
-extern int parse_printer_data(char* line, PRINTER* printer_s);
+void show_lowest_load_printer(TLISTA* printers_list);
 
 
 #endif // !_PRINTERS_H
