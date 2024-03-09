@@ -11,7 +11,7 @@ void menu()
     printf("├───────────────────────┤\n");
     printf("│d) Delete printer      │\n");
     printf("│a) Add printer         │\n");
-    printf("│n) Send new task       │\n");
+    printf("│t) Send new task       │\n");
     printf("│s) Show pending tasks  │\n");
     printf("│p) Print task          │\n");
     printf("│l) Lowest load printer │\n");
@@ -27,7 +27,7 @@ void add_new_printer(TLISTA printers_data)
     PRINTER* printer;
     char option;
     printer = new_printer_structure();
-    printf("Name: ");
+    printf("Printer name: ");
     scanf(" %s", printer->name);
     printf("Brand: ");
     scanf(" %s", printer->brand);
@@ -46,9 +46,9 @@ void add_new_printer(TLISTA printers_data)
             break;
         default:
             free_printer_structure(*printer);
-            FREE(printer);
             break;
     }
+    FREE(printer);
 }
 
 void send_task(TLISTA* printers_data)
@@ -69,13 +69,13 @@ int main(int argc, char** argv)
     TLISTA printers_data = NULL;
     if(argc <= 1)
     {
-        printf("This program must be called as ./'program name' 'printers "
+        printf("[!] This program must be called as ./'program name' 'printers "
                "config file'. Exiting\n");
         return 1;
     }
     else if(load_initial_data(argv[1], &printers_data))
     {
-        printf("Cannot load initial data. Exiting\n");
+        printf("[!] Cannot load initial data. Exiting\n");
         return 1;
     }
     char option;
@@ -93,7 +93,6 @@ int main(int argc, char** argv)
                 printf("Printer name: ");
                 scanf(" %s", name);
                 delete_printer(&printers_data, name);
-                printf("Avaliable printers:\n");
                 avaliable_printers(printers_data);
                 break;
             }
@@ -101,12 +100,11 @@ int main(int argc, char** argv)
             case 'A':
             {
                 add_new_printer(&printers_data);
-                printf("Avaliable printers:\n");
                 avaliable_printers(printers_data);
                 break;
             }
-            case 'n':
-            case 'N':
+            case 't':
+            case 'T':
             {
                 send_task(&printers_data);
                 break;
