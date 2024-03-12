@@ -27,8 +27,7 @@ void* new_printer_structure()
     main->ubication   = NULL;
     main->tasks_count = malloc(sizeof(int));
     crearCola(&(main->tasks));
-    if((main == NULL) || (main->name == NULL) || (main->brand == NULL) ||
-    (main->model == NULL) || (main->ubication == NULL) || (main->tasks_count == NULL))
+    if((main == NULL) || (main->tasks_count == NULL))
     {
         free_printer_structure(*main);
         printf("[!] Cannot allocate memory\n");
@@ -38,8 +37,8 @@ void* new_printer_structure()
     return main;
 }
 
-
-add_printer_data(PRINTER* dest_printer, PRINTER src_printer)
+// 0: no error, 1: error. move data from struct to pointer to struct
+int add_printer_data(PRINTER* dest_printer, PRINTER src_printer)
 {
     dest_printer->name        = malloc(sizeof(char)*strlen(src_printer.name);
     dest_printer->brand       = malloc(sizeof(char)*strlen(src_printer.brand);
@@ -49,6 +48,13 @@ add_printer_data(PRINTER* dest_printer, PRINTER src_printer)
     strcpy(dest_brand, src_brand);
     strcpy(dest_model, src_model);
     strcpy(dest_ubication, src_ubication);
+    if((main->name == NULL) || (main->brand == NULL) ||
+    (main->model == NULL) || (main->ubication == NULL))
+    {
+        free_printer_structure(*main);
+        printf("[!] Cannot allocate memory\n");
+        return NULL;
+    }
 }
 
 
