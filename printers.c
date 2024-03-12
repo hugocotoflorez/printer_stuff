@@ -21,10 +21,10 @@ void* new_printer_structure()
 {
     PRINTER* main;
     main              = malloc(sizeof(PRINTER));
-    main->name        = malloc(NAME_LEN);
-    main->brand       = malloc(BRAND_LEN);
-    main->model       = malloc(MODEL_LEN);
-    main->ubication   = malloc(UBICATION_LEN);
+    main->name        = NULL;
+    main->brand       = NULL;
+    main->model       = NULL;
+    main->ubication   = NULL;
     main->tasks_count = malloc(sizeof(int));
     crearCola(&(main->tasks));
     if((main == NULL) || (main->name == NULL) || (main->brand == NULL) ||
@@ -36,6 +36,15 @@ void* new_printer_structure()
     }
     *main->tasks_count = 0;
     return main;
+}
+
+
+add_printer_data(PRINTER* dest_printer, PRINTER src_printer)
+{
+    dest_printer->name        = malloc(sizeof(char)*strlen(src_printer.name);
+    dest_printer->brand       = malloc(sizeof(char)*strlen(src_printer.brand);
+    dest_printer->model       = malloc(sizeof(char)*strlen(src_printer.model);
+    dest_printer->ubication   = malloc(sizeof(char)*strlen(src_printer.ubication);
 }
 
 
@@ -106,12 +115,14 @@ void avaliable_printers(TLISTA printers_list)
 
 int parse_printer_data(char* line, PRINTER* printer_s)
 {
-    if(sscanf(line, "%s %s %s %s", printer_s->name, printer_s->brand,
-       printer_s->model, printer_s->ubication) < 4)
+    PRINTER printer;
+    if(sscanf(line, "%s %s %s %s", printer.name, printer.brand,
+       printer.model, printer.ubication) < 4)
     {
         printf("[!] Incomplete entry in printers config file\n");
         return 1;
     }
+    add_printer_data(printer_s, printer);
     return 0;
 }
 
