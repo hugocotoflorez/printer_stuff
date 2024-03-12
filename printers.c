@@ -38,7 +38,7 @@ void* new_printer_structure()
 }
 
 // 0: no error, 1: error. move data from struct to pointer to struct
-int add_printer_data(PRINTER* dest_printer, PRINTER src_printer)
+int load_printer_data(PRINTER* dest_printer, PRINTER src_printer)
 {
     dest_printer->name        = malloc(sizeof(char)*strlen(src_printer.name);
     dest_printer->brand       = malloc(sizeof(char)*strlen(src_printer.brand);
@@ -132,7 +132,7 @@ int parse_printer_data(char* line, PRINTER* printer_s)
         printf("[!] Incomplete entry in printers config file\n");
         return 1;
     }
-    add_printer_data(printer_s, printer);
+    load_printer_data(printer_s, printer);
     return 0;
 }
 
