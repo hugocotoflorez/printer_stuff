@@ -30,9 +30,8 @@
 
 void add_new_printer(TLISTA printers_data)
 {
-    PRINTER* new_printer, printer;
+    PRINTER printer;
     char option;
-    new_printer = new_printer_structure();
     printf("Printer name: ");
     scanf(" %s", printer->name);
     printf("Brand: ");
@@ -48,8 +47,8 @@ void add_new_printer(TLISTA printers_data)
     {
         case 'y':
         case 'Y':
-            add_new_printer(new_printer, printer);
-            add_printer(printers_data, *new_printer);
+            load_new_printer(new_printer, printer);
+            add_printer(printers_data, *dynamic_printer(printer));
             break;
         default:
             free_printer_structure(*printer);
