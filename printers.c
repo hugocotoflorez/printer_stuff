@@ -45,6 +45,10 @@ add_printer_data(PRINTER* dest_printer, PRINTER src_printer)
     dest_printer->brand       = malloc(sizeof(char)*strlen(src_printer.brand);
     dest_printer->model       = malloc(sizeof(char)*strlen(src_printer.model);
     dest_printer->ubication   = malloc(sizeof(char)*strlen(src_printer.ubication);
+    strcpy(dest_name, src_name);
+    strcpy(dest_brand, src_brand);
+    strcpy(dest_model, src_model);
+    strcpy(dest_ubication, src_ubication);
 }
 
 
