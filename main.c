@@ -47,8 +47,7 @@ void add_new_printer(TLISTA printers_data)
     {
         case 'y':
         case 'Y':
-            load_new_printer(new_printer, printer);
-            add_printer(printers_data, *dynamic_printer(printer));
+            add_printer(printers_data, *alloc_printer(printer));
             break;
         default:
             free_printer_structure(*printer);
