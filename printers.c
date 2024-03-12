@@ -37,6 +37,17 @@ void* new_printer_structure()
     return main;
 }
 
+
+PRINTER* alloc_printer(PRINTER printer)
+{
+    PRINTER* new_printer = new_printer_structure();
+    if(!load_new_printer(new_printer, printer))
+        return new_printer;
+    printf("[!] Cannot allocate memory\n");
+    return NULL;
+}
+
+
 // 0: no error, 1: error. move data from struct to pointer to struct
 int load_printer_data(PRINTER* dest_printer, PRINTER src_printer)
 {
