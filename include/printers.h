@@ -61,6 +61,11 @@ int get_printer_from_file(FILE* file, TLISTA* printers_list);
 int load_initial_data(char* filename, TLISTA* printers_list);
 
 /**
+ * rewrite_printers_file
+ */
+int rewrite_printers_file(char* filename, TLISTA* printers_list);
+
+/**
  * get_printer_data
  */
 int get_printer_data(TLISTA* printers_list, char* printer_name, PRINTER* printer_s);

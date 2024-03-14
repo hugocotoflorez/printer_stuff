@@ -28,7 +28,7 @@
     scanf(" %s", name);
 
 
-void add_new_printer(TLISTA printers_data)
+void add_new_printer(TLISTA printers_list)
 {
     PRINTER* printer;
     char option;
@@ -48,7 +48,7 @@ void add_new_printer(TLISTA printers_data)
     {
         case 'y':
         case 'Y':
-            add_printer(printers_data, *printer);
+            add_printer(printers_list, *printer);
             break;
         default:
             free_printer_structure(*printer);
@@ -58,7 +58,7 @@ void add_new_printer(TLISTA printers_data)
 }
 
 
-void send_task(TLISTA* printers_data)
+void send_task(TLISTA* printers_list)
 {
     char printer_name[NAME_LEN];
     int task;
@@ -66,21 +66,21 @@ void send_task(TLISTA* printers_data)
     scanf(" %s", printer_name);
     printf("Task id: ");
     scanf(" %d", &task);
-    new_task(printers_data, printer_name, task);
+    new_task(printers_list, printer_name, task);
 }
 
 
 int main(int argc, char** argv)
 {
     CLRSCREEN();
-    TLISTA printers_data = NULL;
+    TLISTA printers_list = NULL;
     if(argc <= 1)
     {
         printf("[!] This program must be called as ./'program name' 'printers "
                "config file'. Exiting\n");
         return 1;
     }
-    else if(load_initial_data(argv[1], &printers_data))
+    else if(load_initial_data(argv[1], &printers_list))
     {
         printf("[!] Cannot load initial data. Exiting\n");
         return 1;
@@ -97,35 +97,36 @@ int main(int argc, char** argv)
             case 'd':
             case 'D':
                 GET_PNAME(name);
-                delete_printer(&printers_data, name);
-                avaliable_printers(printers_data);
+                delete_printer(&printers_list, name);
+                avaliable_printers(printers_list);
                 break;
             case 'a':
             case 'A':
-                add_new_printer(&printers_data);
-                avaliable_printers(printers_data);
+                add_new_printer(&printers_list);
+                avaliable_printers(printers_list);
                 break;
             case 't':
             case 'T':
-                send_task(&printers_data);
+                send_task(&printers_list);
                 break;
             case 's':
             case 'S':
                 GET_PNAME(name);
-                show_pending_tasks(&printers_data, name);
+                show_pending_tasks(&printers_list, name);
                 break;
             case 'p':
             case 'P':
                 GET_PNAME(name);
-                print_task(&printers_data, name);
+                print_task(&printers_list, name);
                 break;
             case 'l':
             case 'L':
-                show_lowest_load_printer(&printers_data);
+                show_lowest_load_printer(&printers_list);
                 break;
             case 'e':
             case 'E':
-                delete_list(&printers_data);
+                rewrite_printers_file(argv[1], &printers_list);
+                delete_list(&printers_list);
                 printf("Exiting...\n");
                 break;
             default:
