@@ -3,58 +3,69 @@
 #include <stdlib.h>
 #include <string.h>
 
-
+#define RALIGN "\e[40C"
+#define ADJUST "\e[1F"
 #define CLRSCREEN() printf("\e[H\e[J");
+#define BG "\e[44m"
+#define RBG "\e[0m"
 
-#define MENU()                             \
-    printf("┌───────────────────────┐\n"); \
-    printf("│Printer stuff          │\n"); \
-    printf("├───────────────────────┤\n"); \
-    printf("│d) Delete printer      │\n"); \
-    printf("│a) Add printer         │\n"); \
-    printf("│t) Send new task       │\n"); \
-    printf("│s) Show pending tasks  │\n"); \
-    printf("│p) Print task          │\n"); \
-    printf("│l) Lowest load printer │\n"); \
-    printf("│e) Exit                │\n"); \
-    printf("├───────────────────────┤\n"); \
-    printf("│Option:                │\n"); \
-    printf("└───────────────────────┘\n"); \
-    printf("\e[2F\e[9C");
+#define MENU(char)                                \
+    printf("\e[s\e[100F" BG);                     \
+    printf(RALIGN "┌───────────────────────┐\n"); \
+    printf(RALIGN "│Printer stuff          │\n"); \
+    printf(RALIGN "├───────────────────────┤\n"); \
+    printf(RALIGN "│h) Avaliable printers  │\n"); \
+    printf(RALIGN "│d) Delete printer      │\n"); \
+    printf(RALIGN "│a) Add printer         │\n"); \
+    printf(RALIGN "│t) Send new task       │\n"); \
+    printf(RALIGN "│s) Show pending tasks  │\n"); \
+    printf(RALIGN "│p) Print task          │\n"); \
+    printf(RALIGN "│l) Lowest load printer │\n"); \
+    printf(RALIGN "│e) Exit                │\n"); \
+    printf(RALIGN "├───────────────────────┤\n"); \
+    printf(RALIGN "│Option:                │\n"); \
+    printf(RALIGN "└───────────────────────┘\n"); \
+    printf("\e[2F\e[9C" RALIGN);                  \
+    scanf(" %c", &option);                        \
+    printf(RBG "\e[u" ADJUST);
 
 
 #define GET_PNAME(name)       \
     printf("Printer name: "); \
     scanf(" %s", name);
 
+#define nscanf(n, string) fgets(string, n, stdin);
+
 
 void add_new_printer(TLISTA printers_list)
 {
-    PRINTER* printer;
+    char name[NAME_LEN], brand[BRAND_LEN], model[MODEL_LEN], ubication[UBICATION_LEN];
     char option;
-    printer = new_printer_structure();
     printf("Printer name: ");
-    scanf(" %s", printer->name);
+    scanf(" %s", name);
     printf("Brand: ");
-    scanf(" %s", printer->brand);
+    scanf(" %s", brand);
     printf("Model: ");
-    scanf(" %s", printer->model);
+    scanf(" %s", model);
     printf("Ubication: ");
-    scanf(" %s", printer->ubication);
-    printf("Add printer %s %s %s %s [y/n] ", printer->name, printer->brand,
-    printer->model, printer->ubication);
+    scanf(" %s", ubication);
+    if(strlen(name) > NAME_LEN || strlen(brand) > BRAND_LEN ||
+    strlen(model) > MODEL_LEN || strlen(ubication) > UBICATION_LEN)
+    {
+        printf("[!] Invalid printer format!\n  Cannot overpass %d-%d-%d-%d length\n",
+        NAME_LEN, BRAND_LEN, MODEL_LEN, UBICATION_LEN);
+        return;
+    }
+    printf("Add printer %s [y/n] ", name);
     scanf(" %c", &option);
+
     switch(option)
     {
         case 'y':
         case 'Y':
-            add_printer(printers_list, *printer);
-            break;
-        default:
-            free_printer_structure(*printer);
+            add_printer(printers_list, *allocate_printer(name, brand, model, ubication));
             break;
     }
-    free(printer);
 }
 
 
@@ -72,8 +83,10 @@ void send_task(TLISTA* printers_list)
 
 int main(int argc, char** argv)
 {
-    CLRSCREEN();
+    char option;
+    char name[NAME_LEN];
     TLISTA printers_list = NULL;
+    CLRSCREEN();
     if(argc <= 1)
     {
         printf("[!] This program must be called as ./'program name' 'printers "
@@ -85,15 +98,17 @@ int main(int argc, char** argv)
         printf("[!] Cannot load initial data. Exiting\n");
         return 1;
     }
-    char option;
-    char name[NAME_LEN];
+    avaliable_printers(printers_list);
     do
     {
-        MENU();
-        scanf(" %c", &option);
+        MENU(option);
         printf("\e[2B");
         switch(option)
         {
+            case 'h':
+            case 'H':
+                avaliable_printers(printers_list);
+                break;
             case 'd':
             case 'D':
                 GET_PNAME(name);
@@ -128,6 +143,7 @@ int main(int argc, char** argv)
                 rewrite_printers_file(argv[1], &printers_list);
                 delete_list(&printers_list);
                 printf("Exiting...\n");
+                CLRSCREEN();
                 break;
             default:
                 printf("Option not found\n");
