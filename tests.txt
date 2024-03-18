@@ -4,6 +4,7 @@ LOAD FILE
     no existing file
     no txt file
     file without correct format
+    same name printers
 
 DELETE
     delete the last one
