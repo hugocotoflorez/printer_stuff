@@ -3,13 +3,8 @@
 #define LISTA_H
 #include "cola.h"
 #include <stdlib.h>
+#include "printer_data.h"
 
-typedef struct
-{
-    char *name, *brand, *model, *ubication;
-    TCOLA tasks;
-    int* tasks_count;
-} PRINTER;
 
 typedef PRINTER TIPOELEMENTOLISTA;
 

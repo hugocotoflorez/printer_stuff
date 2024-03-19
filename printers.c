@@ -121,8 +121,8 @@ void avaliable_printers(TLISTA printers_list)
         current_position = siguienteLista(printers_list, current_position))
     {
         recuperarElementoLista(printers_list, current_position, &current_element);
-        printf("|  %s %s %s %s\n", current_element.name,
-        current_element.brand, current_element.model, current_element.ubication);
+        printf("|  %s %s %s %s\n", current_element.name, current_element.brand,
+        current_element.model, current_element.ubication);
     }
 }
 
@@ -143,6 +143,7 @@ int get_printer_from_file(FILE* file, TLISTA* printers_list)
 {
     char line[PRINTER_STR_MAX];
     PRINTER* printer_s;
+    PRINTER temp;
     if(file == NULL)
     {
         printf("[!] Invalid file pointer\n");
@@ -152,7 +153,7 @@ int get_printer_from_file(FILE* file, TLISTA* printers_list)
     {
         if((printer_s = parse_printer_data(line)) != NULL)
         {
-            insertarElementoLista(printers_list, finLista(*printers_list), *printer_s);
+            add_printer(printers_list, *printer_s);
             continue;
         }
         return 1;

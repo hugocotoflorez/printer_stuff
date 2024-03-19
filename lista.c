@@ -1,17 +1,9 @@
-#include "include/cola.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "include/printer_data.h"
 
 /** Definicion del tipo de elemento almacenado en la lista **/
 
-// typedef int TIPOELEMENTOLISTA;
-typedef struct
-{
-    char *name, *brand, *model, *ubication;
-    TCOLA tasks;
-    int tasks_counter;
-} PRINTER;
-typedef PRINTER TIPOELEMENTOLISTA;
 ///////////////////////////////////////////////////
 
 /** Estructura para un nodo de la lista **/
